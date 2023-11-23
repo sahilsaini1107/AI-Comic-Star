@@ -48,8 +48,8 @@ const HeroCanvas = ({ images }) => {
 
             // ctx.filter = 'grayscale(100%)';
             ctx.drawImage(img, imageX, imageY, cellWidth, cellHeight);
-            ctx.strokeStyle = 'aqua';
-            ctx.lineWidth = 8;
+            ctx.strokeStyle = '#79451D';
+            ctx.lineWidth = 4;
             ctx.strokeRect(imageX, imageY, cellWidth, cellHeight);
 
             // Other drawing operations (circles, text, etc.)
@@ -65,7 +65,7 @@ const HeroCanvas = ({ images }) => {
             ctx.arc(circle1X, circle1Y, 20, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
             ctx.fill();
-            ctx.strokeStyle = 'aqua';
+            ctx.strokeStyle = 'orange';
             ctx.lineWidth = 2;
             ctx.stroke();
 
@@ -75,7 +75,7 @@ const HeroCanvas = ({ images }) => {
             ctx.arc(circle2X, circle2Y, 8, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
             ctx.fill();
-            ctx.strokeStyle = 'aqua';
+            ctx.strokeStyle = 'orange';
             ctx.lineWidth = 2;
             ctx.stroke();
 

@@ -1,0 +1,10 @@
+.conatin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas{
+    background-image: url('../../assets/4833725.jpg'); 
+    background-size: cover;
+}

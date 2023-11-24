@@ -70,20 +70,33 @@ const HeroCanvas = ({ images }) => {
             const textWidth = ctx.measureText(text).width;
             const fontSize = Math.min(10, 5+(Math.min(cellWidth+10, cellHeight+10) / ((textWidth) ? textWidth/2: 1)));
 
-            const circle1X = imageX + 35;
-            const circle1Y = imageY + 35;
+            let circlesize1 = 30;
+            let circlesize2 = 10;
+            let circle1X = imageX + 35;
+            let circle1Y = imageY + 35;
+            let circle2X = imageX + 69;
+            let circle2Y = imageY + 59;
+            if(isMobile){
+              circlesize1 = 15;
+              circle1X = imageX + 18;
+              circle1Y = imageY + 18;            
+              circle2X = imageX + 38;
+              circle2Y = imageY + 33;
+              circlesize2 = 8;
+            }
+            
+
             ctx.beginPath();
-            ctx.arc(circle1X, circle1Y, fontSize+15, 0, 2 * Math.PI);
+            ctx.arc(circle1X, circle1Y, circlesize1, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
             ctx.fill();
             ctx.strokeStyle = 'orange';
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            const circle2X = imageX + 65;
-            const circle2Y = imageY + 60;
+
             ctx.beginPath();
-            ctx.arc(circle2X, circle2Y, 8, 0, 2 * Math.PI);
+            ctx.arc(circle2X, circle2Y, circlesize2, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
             ctx.fill();
             ctx.strokeStyle = 'orange';

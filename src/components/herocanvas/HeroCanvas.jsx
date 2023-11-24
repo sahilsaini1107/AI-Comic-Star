@@ -1,10 +1,17 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import heroImage from '../../assets/4833725.jpg';
 
 const HeroCanvas = ({ images }) => {
   const canvasRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    let timeoutId;
+
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+    };
+
     const canvas = canvasRef.current;
     if (!canvas) {
       console.error('Canvas element not found');
@@ -26,23 +33,23 @@ const HeroCanvas = ({ images }) => {
       const gapX = 15; // gap between columns
       const gapY = 15; // gap between rows
 
-      // const cellWidth = width / 4;
-      // const cellHeight = height / 3;
-      const cellWidth = ((width - (gapX * 3)) / 4) -30; // Adjusting for gaps
-      const cellHeight = ((height - (gapY * 2)) / 3)-15; // Adjusting for gaps
+      const columns = isMobile ? 3 : 4;
+      const rows = isMobile ? 4 : 3;
+
+      const cellWidth = ((width - (gapX * 3)) / columns) -30; // Adjusting for gaps
+      const cellHeight = ((height - (gapY * 2)) / rows)-15; // Adjusting for gaps
     
 
       const image = new Image();
       image.onload = () => {
         ctx.drawImage(image, 0, 0, width, height);
         images.forEach((url, index) => {
-          const row = Math.floor(index / 4);
-          const col = index % 4;
+          const row = Math.floor(index / columns);
+          const col = index % columns;
 
           const img = new Image();
           img.onload = () => {
-            // const imageX = col * cellWidth + 40;
-            // const imageY = row * cellHeight + 20 ;
+
             const imageX = col * (cellWidth + gapX) + 60; 
             const imageY = row * (cellHeight + gapY) + 20;
 
@@ -55,22 +62,26 @@ const HeroCanvas = ({ images }) => {
             // Other drawing operations (circles, text, etc.)
             ctx.font = '16px Arial';
             // Replace url.anno with a string or the appropriate property from the images object
-            const text = 'Sample Text'; // Replace with the desired text
-            const textWidth = ctx.measureText(text).width;
-            const fontSize = Math.min(16, Math.min(cellWidth, cellHeight) / (textWidth || 1));
+            const text = url.anno; // Replace with the desired text
+            const maxChars = 9;
+             // Truncate text if it exceeds the maximum character count
+            const truncatedText = text.length > maxChars ? `${text.substring(0, maxChars)}...` : text;
 
-            const circle1X = imageX + 27;
-            const circle1Y = imageY + 27;
+            const textWidth = ctx.measureText(text).width;
+            const fontSize = Math.min(10, 5+(Math.min(cellWidth+10, cellHeight+10) / ((textWidth) ? textWidth/2: 1)));
+
+            const circle1X = imageX + 35;
+            const circle1Y = imageY + 35;
             ctx.beginPath();
-            ctx.arc(circle1X, circle1Y, 20, 0, 2 * Math.PI);
+            ctx.arc(circle1X, circle1Y, fontSize+15, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
             ctx.fill();
             ctx.strokeStyle = 'orange';
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            const circle2X = imageX + 55;
-            const circle2Y = imageY + 45;
+            const circle2X = imageX + 65;
+            const circle2Y = imageY + 60;
             ctx.beginPath();
             ctx.arc(circle2X, circle2Y, 8, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
@@ -83,7 +94,7 @@ const HeroCanvas = ({ images }) => {
             ctx.textAlign = 'center';
             ctx.font = `${fontSize}px Arial`;
             ctx.textBaseline = 'middle';
-            ctx.fillText(text, circle1X, circle1Y); // Replace url.anno with the desired text variable
+            ctx.fillText(truncatedText, circle1X, circle1Y); // Replace url.anno with the desired text variable
           };
           img.onerror = (error) => {
             console.error('Error loading image:', error);
@@ -94,13 +105,24 @@ const HeroCanvas = ({ images }) => {
       image.src = heroImage;
     };
 
-    window.addEventListener('resize', drawImages);
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        checkIsMobile();
+        drawImages();
+      }, 250); // Adjust the delay time (in milliseconds) as needed
+    };
+
+    window.addEventListener('resize',handleResize);
+
+    checkIsMobile();
     drawImages();
 
     return () => {
-      window.removeEventListener('resize', drawImages);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
     };
-  }, [images]);
+  }, [images, isMobile]);
 
   const downloadCanvas = () => {
     const canvas = canvasRef.current;
